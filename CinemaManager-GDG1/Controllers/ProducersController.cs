@@ -14,7 +14,13 @@ namespace CinemaManager_GDG1.Controllers
         // GET: ProducersController
         public ActionResult Index()
         {
-            return View(_context.Producers);
+            return View(_context.Producers.ToList());
+        }
+        
+        public ActionResult ProdsAndTheirMovies()
+        {
+            var movies = _context.Movies.ToList();
+            return View(_context.Producers.ToList());
         }
 
         // GET: ProducersController/Details/5
@@ -50,16 +56,19 @@ namespace CinemaManager_GDG1.Controllers
         // GET: ProducersController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Producer prod = _context.Producers.Find(id);
+            return View(prod);
         }
 
         // POST: ProducersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Producer p)
         {
             try
             {
+                _context.Producers.Update(p);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
